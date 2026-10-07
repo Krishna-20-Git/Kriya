@@ -46,6 +46,13 @@
     ],
     "experiments": {
       "typedRoutes": false
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "a3733ed6-9a9d-4942-aa54-1e250d055028"
+      }
+    },
+    "owner": "krishna20"
   }
 }
