@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-android/
+*.tsbuildinfo
+
+# Expo
+.expo/
+apps/mobile/expo-env.d.ts
+apps/mobile/android/
+apps/mobile/ios/
+*.apk
+*.aab
+
+# Environment — real values never go into Git; *.env.example files document them
+.env
+.env.*
+!.env.example
+
+# OS / editor
+.DS_Store
+*.log
+.vscode/*
+!.vscode/extensions.json
+.idea/
+coverage/
+
+# Signing keys and service-account credentials — never commit.
+# (apps/mobile/google-services.json is public client config and IS committed: EAS builds need it.)
+*service-account*.json
+*firebase-adminsdk*.json
+credentials.json
+*.jks
+*.keystore
+*.p8
+*.p12
+*.pem

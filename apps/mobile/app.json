@@ -1,0 +1,51 @@
+{
+  "expo": {
+    "name": "Kriya",
+    "slug": "kriya-pms",
+    "version": "1.0.0",
+    "scheme": "kriya",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "backgroundColor": "#F6F7F6",
+    "icon": "./assets/icon.png",
+    "android": {
+      "package": "com.kriya.pms",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1D6B57"
+      },
+      "edgeToEdgeEnabled": true
+    },
+    "ios": {
+      "bundleIdentifier": "com.kriya.pms",
+      "supportsTablet": false
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 120,
+          "resizeMode": "contain",
+          "backgroundColor": "#F6F7F6",
+          "dark": {
+            "backgroundColor": "#0F1513"
+          }
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#1D6B57",
+          "defaultChannel": "due-reminders"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": false
+    }
+  }
+}

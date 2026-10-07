@@ -1,0 +1,39 @@
+# Render Blueprint for the API (https://render.com/docs/blueprint-spec).
+# Render → New → Blueprint → select this repository. Then fill in the two "sync: false" values.
+# The database is external (Neon free tier recommended — Render's free Postgres expires after 30 days).
+services:
+  - type: web
+    name: pms-api
+    runtime: node
+    plan: free
+    region: singapore
+    # Installs only the API, the shared package and the root TypeScript compiler (skips web/mobile).
+    buildCommand: npm ci --include-workspace-root -w @pms/shared -w @pms/api && npm run build:shared && npm run build -w @pms/api
+    # Pending migrations are applied on every start; they are idempotent.
+    startCommand: npm run db:migrate:prod -w @pms/api && npm run start -w @pms/api
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: '22'
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false # paste the Neon connection string
+      - key: DATABASE_SSL
+        value: 'true'
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: WEB_ORIGIN
+        sync: false # e.g. https://your-app.vercel.app
+      # Requests arrive via Render's proxy (and, for the web app, also via Vercel's rewrite).
+      - key: TRUST_PROXY
+        value: '2'
+      # Due-tomorrow push reminders, triggered hourly by .github/workflows/reminders.yml.
+      - key: CRON_SECRET
+        generateValue: true # copy it into the GitHub secret CRON_SECRET
+      - key: REMINDER_HOUR
+        value: '18'
+      - key: COOKIE_SAMESITE
+        value: lax
+      - key: LOG_LEVEL
+        value: info

@@ -1,0 +1,44 @@
+{
+  "name": "project-management-system",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Project & task management system \u2014 web (React), Android (Expo) and a single Express + PostgreSQL API",
+  "workspaces": [
+    "packages/shared",
+    "apps/api",
+    "apps/web",
+    "apps/mobile"
+  ],
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "build:shared": "npm run build -w @pms/shared",
+    "dev:api": "npm run build:shared && npm run dev -w @pms/api",
+    "dev:web": "npm run build:shared && npm run dev -w @pms/web",
+    "dev:mobile": "npm run build:shared && npm run start -w @pms/mobile",
+    "db:migrate": "npm run build:shared && npm run db:migrate -w @pms/api",
+    "db:seed": "npm run build:shared && npm run db:seed -w @pms/api",
+    "typecheck": "npm run build:shared && npm run typecheck --workspaces --if-present",
+    "lint": "eslint .",
+    "test": "npm run build:shared && npm run test --workspaces --if-present",
+    "build": "npm run build:shared && npm run build -w @pms/api && npm run build -w @pms/web",
+    "verify:flow": "node scripts/verify-flow.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.0",
+    "eslint": "^9.39.0",
+    "eslint-plugin-react-hooks": "^7.0.0",
+    "globals": "^16.5.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.46.0",
+    "vitest": "^4.0.0"
+  },
+  "allowScripts": {
+    "bcrypt@6.0.0": true,
+    "esbuild@0.18.20": true,
+    "esbuild@0.25.12": true,
+    "esbuild@0.28.2": true
+  },
+  "type": "module"
+}

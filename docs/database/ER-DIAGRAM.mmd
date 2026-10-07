@@ -1,0 +1,60 @@
+erDiagram
+    USERS ||--o{ PROJECTS : "owns"
+    PROJECTS ||--o{ TASKS : "contains"
+    USERS ||--o{ REFRESH_TOKENS : "has sessions"
+    USERS ||--o{ AUDIT_LOGS : "performed"
+
+    USERS {
+        uuid id PK
+        varchar(100) full_name "NOT NULL"
+        varchar(254) email UK "unique on lower(email)"
+        text password_hash "bcrypt, never returned"
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    PROJECTS {
+        uuid id PK
+        uuid user_id FK "→ users.id ON DELETE CASCADE"
+        varchar(120) name "NOT NULL"
+        text description
+        project_status status "NOT_STARTED | IN_PROGRESS | COMPLETED"
+        date start_date "NOT NULL"
+        date end_date "CHECK end_date >= start_date"
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    TASKS {
+        uuid id PK
+        uuid project_id FK "→ projects.id ON DELETE CASCADE"
+        varchar(160) name "NOT NULL"
+        text description
+        task_priority priority "LOW | MEDIUM | HIGH"
+        task_status status "PENDING | IN_PROGRESS | COMPLETED"
+        date due_date
+        timestamptz completed_at "set by server"
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    REFRESH_TOKENS {
+        uuid id PK
+        uuid user_id FK "→ users.id ON DELETE CASCADE"
+        varchar(64) token_hash UK "SHA-256, raw token never stored"
+        uuid family_id "one per login, for reuse detection"
+        timestamptz expires_at
+        timestamptz revoked_at
+        varchar(20) revoked_reason
+        timestamptz created_at
+    }
+
+    AUDIT_LOGS {
+        uuid id PK
+        uuid user_id FK "→ users.id ON DELETE CASCADE"
+        audit_action action "LOGIN | TASK_CREATED | ..."
+        varchar(20) entity_type "USER | PROJECT | TASK"
+        uuid entity_id "no FK: survives deletion"
+        varchar(160) entity_name
+        timestamptz created_at
+    }

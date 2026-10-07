@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Kriya — plan projects, track tasks and see progress across web and Android." />
+    <meta name="theme-color" content="#F6F7F6" />
+    <title>Kriya</title>
+    <script>
+      // Apply the saved theme before the first paint so a dark-mode user never sees a white flash.
+      // Keep the key in sync with THEME_STORAGE_KEY in src/lib/theme.tsx.
+      (function () {
+        var pref = null;
+        try { pref = localStorage.getItem('kriya-theme'); } catch (e) {}
+        var dark = pref === 'dark' || (pref !== 'light' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+        if (dark) document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0F1513');
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,45 @@
+# Local stack: PostgreSQL + API.
+#   docker compose up --build
+#   docker compose exec api node dist/db/seed.js     # optional demo data
+# API: http://localhost:4000  ·  Swagger: http://localhost:4000/api/docs
+# The web app (npm run dev:web) and the mobile app run outside Docker and point at port 4000.
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: pms
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d pms']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATABASE_URL: postgres://postgres:postgres@db:5432/pms
+      # Local-only secret. Generate a real one for any deployment.
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-docker-local-development-secret-change-me}
+      WEB_ORIGIN: http://localhost:5173
+      # Plain HTTP locally, so the cookie cannot be Secure here. Deployments use HTTPS and keep the default (true).
+      COOKIE_SECURE: 'false'
+      LOG_LEVEL: info
+    ports:
+      - '4000:4000'
+
+volumes:
+  pgdata:

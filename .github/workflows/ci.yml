@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Lint, typecheck, test, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    # Integration tests run against a real PostgreSQL, the same as production.
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: pms_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/pms_test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Build shared package
+        run: npm run build:shared
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck (shared, API, web, mobile)
+        run: npm run typecheck
+
+      - name: Test (shared unit, API integration, web unit)
+        run: npm test
+
+      - name: Build API and web
+        run: npm run build
+
+      - name: Bundle Android app (Metro)
+        working-directory: apps/mobile
+        run: npx expo export --platform android --output-dir dist-android
+        env:
+          CI: 1
+          EXPO_PUBLIC_API_URL: https://example.invalid
+
+      - name: Export OpenAPI document and check it is committed
+        run: |
+          npm run openapi:export -w @pms/api
+          git diff --exit-code docs/api/openapi.json || (echo "docs/api/openapi.json is out of date — run 'npm run openapi:export -w @pms/api'" && exit 1)
