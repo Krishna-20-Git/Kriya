@@ -43,7 +43,7 @@ Free-tier setup used for the submission:
 2. Vercel → **Add New Project** → import the repository.
    - Root directory: `apps/web`
    - Framework preset: Vite
-   - Install command: `cd ../.. && npm ci --include-workspace-root -w @pms/shared -w @pms/web`
+   - Install command: `cd ../.. && npm ci --include=dev --include-workspace-root -w @pms/shared -w @pms/web`
    - Build command: `cd ../.. && npm run build:shared && npm run build -w @pms/web`
    - Output directory: `dist`
    - Environment variables: none needed (`VITE_API_URL` stays empty).

@@ -8,7 +8,8 @@ services:
     plan: free
     region: singapore
     # Installs only the API, the shared package and the root TypeScript compiler (skips web/mobile).
-    buildCommand: npm ci --include-workspace-root -w @pms/shared -w @pms/api && npm run build:shared && npm run build -w @pms/api
+    # --include=dev: NODE_ENV=production below would otherwise skip the TypeScript type packages needed to build.
+    buildCommand: npm ci --include=dev --include-workspace-root -w @pms/shared -w @pms/api && npm run build:shared && npm run build -w @pms/api
     # Pending migrations are applied on every start; they are idempotent.
     startCommand: npm run db:migrate:prod -w @pms/api && npm run start -w @pms/api
     healthCheckPath: /api/health
