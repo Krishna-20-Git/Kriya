@@ -1,6 +1,6 @@
-﻿# Kriya â€” Project Management System (Web + Android)
+# Kriya — Project Management System (Web + Android)
 
-*Kriya (à¤•à¥à¤°à¤¿à¤¯à¤¾) is Sanskrit for "action" â€” where plans turn into done work.*
+*Kriya (क्रिया) is Sanskrit for "action" — where plans turn into done work.*
 
 A project and task manager with a **React web app** and a **React Native (Expo) Android app** that share **one Express API and one PostgreSQL database**. Sign in with the same account on either platform; a change made on one appears on the other after a refresh (pull-to-refresh on Android).
 
@@ -8,10 +8,10 @@ A project and task manager with a **React web app** and a **React Native (Expo) 
 |---|---|
 | **Source** | https://github.com/Krishna-20-Git/Kriya |
 | **Web app** | https://kriya-eosin.vercel.app |
-| **API** | https://pms-api-lyg7.onrender.com Â· Swagger: https://pms-api-lyg7.onrender.com/api/docs |
-| **Android** | APK built with EAS â€” *link after building* |
+| **API** | https://pms-api-lyg7.onrender.com · Swagger: https://pms-api-lyg7.onrender.com/api/docs |
+| **Android** | [Download the APK](https://expo.dev/accounts/krishna20/projects/kriya-pms/builds/93444ab8-4813-47db-8e62-34cebcd7037d) (Expo build page — scan the QR code or tap Install on the phone) |
 | **Demo account** | `demo@example.com` / `Demo@12345` (test data only) |
-| **Admin account** | Local: `admin@example.com` / `Admin@12345`. Deployed: same email, password shared privately with the evaluators (never published â€” see [RBAC](#role-based-access-control)) |
+| **Admin account** | Local: `admin@example.com` / `Admin@12345`. Deployed: same email, password shared privately with the evaluators (never published — see [RBAC](#role-based-access-control)) |
 
 ![Web dashboard](docs/screenshots/web-dashboard.png)
 
@@ -19,7 +19,7 @@ A project and task manager with a **React web app** and a **React Native (Expo) 
 
 ## Contents
 
-[Features](#features) Â· [Tech stack](#tech-stack) Â· [Architecture](#architecture) Â· [Folder structure](#folder-structure) Â· [Database](#database) Â· [Authentication](#authentication) Â· [Security](#security) Â· [API](#api-documentation) Â· [Local setup](#local-setup) Â· [Environment variables](#environment-variables) Â· [Running the mobile app](#running-the-mobile-app) Â· [Testing](#testing) Â· [Docker](#docker) Â· [Deployment](#deployment) Â· [Cross-platform demo](#cross-platform-demo) Â· [Troubleshooting](#troubleshooting) Â· [Known limitations](#known-limitations) Â· [Future improvements](#future-improvements)
+[Features](#features) · [Tech stack](#tech-stack) · [Architecture](#architecture) · [Folder structure](#folder-structure) · [Database](#database) · [Authentication](#authentication) · [Security](#security) · [API](#api-documentation) · [Local setup](#local-setup) · [Environment variables](#environment-variables) · [Running the mobile app](#running-the-mobile-app) · [Testing](#testing) · [Docker](#docker) · [Deployment](#deployment) · [Cross-platform demo](#cross-platform-demo) · [Troubleshooting](#troubleshooting) · [Known limitations](#known-limitations) · [Future improvements](#future-improvements)
 
 ---
 
@@ -27,10 +27,10 @@ A project and task manager with a **React web app** and a **React Native (Expo) 
 
 **Required**
 
-- Register, log in, log out â€” one account on web and Android; emails are unique (case-insensitive); passwords hashed with bcrypt.
+- Register, log in, log out — one account on web and Android; emails are unique (case-insensitive); passwords hashed with bcrypt.
 - Projects: create, view, edit, delete, list your own. Fields: name, description, status (Not Started / In Progress / Completed), start date, end date, created date.
 - Tasks inside projects: create, edit, delete, mark completed. Fields: name, description, priority (Low / Medium / High), status (Pending / In Progress / Completed), due date, created date.
-- Dashboard: total projects, total tasks, completed tasks, pending tasks, projects in progress â€” computed live from the signed-in user's data.
+- Dashboard: total projects, total tasks, completed tasks, pending tasks, projects in progress — computed live from the signed-in user's data.
 - Search projects and tasks by name; filter projects by status; filter tasks by status and priority. Filtering happens on the server.
 - Android: register/login/logout, dashboard, projects (search, filter, sort, create, edit, delete), project tasks, create/edit/delete tasks, complete tasks, change status and priority, search and filter, pull-to-refresh, token in secure device storage, session-expiry redirect with a message, clear no-network states.
 
@@ -38,8 +38,8 @@ A project and task manager with a **React web app** and a **React Native (Expo) 
 
 | Bonus | Where |
 |---|---|
-| Role-based access control (USER / ADMIN) | `role` column, `requireRole('ADMIN')` middleware, `/api/admin/*`, web **Admin** page â€” see [RBAC](#role-based-access-control) |
-| Push notifications for tasks due tomorrow | Expo push + hourly job (`/api/internal/reminders/run`, GitHub Actions schedule) with an on-device fallback â€” see [Reminders](#due-tomorrow-reminders) |
+| Role-based access control (USER / ADMIN) | `role` column, `requireRole('ADMIN')` middleware, `/api/admin/*`, web **Admin** page — see [RBAC](#role-based-access-control) |
+| Push notifications for tasks due tomorrow | Expo push + hourly job (`/api/internal/reminders/run`, GitHub Actions schedule) with an on-device fallback — see [Reminders](#due-tomorrow-reminders) |
 | Refresh tokens with rotation and reuse detection | `apps/api/src/services/auth.service.ts` |
 | Pagination and safe (whitelisted) sorting | `GET /api/projects`, `GET /api/tasks` |
 | Audit log of user actions | `audit_logs` table, `GET /api/activity`, web Settings page |
@@ -47,7 +47,7 @@ A project and task manager with a **React web app** and a **React Native (Expo) 
 | Offline viewing of tasks on Android | TanStack Query cache persisted to AsyncStorage (tokens stay in SecureStore) |
 | Unit and integration tests (224) | Vitest + Supertest against real PostgreSQL |
 | Docker | `apps/api/Dockerfile`, `docker-compose.yml` |
-| CI/CD | `.github/workflows/ci.yml` â€” lint, typecheck, tests, builds, Android bundle; Render and Vercel deploy on every push to `main` |
+| CI/CD | `.github/workflows/ci.yml` — lint, typecheck, tests, builds, Android bundle; Render and Vercel deploy on every push to `main` |
 | Light / dark / system theme | Settings on web and Android; WCAG AA contrast checked in tests |
 
 Every bonus item in the assignment is implemented.
@@ -58,16 +58,16 @@ Two roles: **USER** (everyone, by default) and **ADMIN**.
 
 | Capability | USER | ADMIN | Why |
 |---|---|---|---|
-| Own projects, tasks, dashboard, theme, reminders | âœ… | âœ… | Admins are users too; their own work is unchanged. |
-| Read or change other users' projects and tasks | âŒ 404 | âŒ 404 | The assignment requires that users only see their own data. Admin duties (accounts, security review) don't need task contents, so least privilege applies. |
-| List all accounts with project/task counts and last activity | âŒ 403 | âœ… | Needed to manage accounts; counts show activity without exposing content. |
-| Promote a user to admin / demote an admin | âŒ 403 | âœ… | Someone has to manage roles; letting users do it would be privilege escalation. |
-| Demote yourself | â€“ | âŒ 409 | Prevents an accidental lock-out; another admin must do it. |
-| Demote the last admin | â€“ | âŒ 409 | The system must always have someone who can manage roles. |
-| Read the system-wide audit log (filter by user / action) | âŒ 403 | âœ… | Accountability and incident review (e.g. who changed a role, suspicious sign-ins). |
-| Edit or delete audit entries | âŒ | âŒ | The log must be tamper-evident, even against admins. |
-| See passwords, password hashes or tokens | âŒ | âŒ | Never exposed by any endpoint; hashes and tokens are one-way. |
-| Delete accounts or reset passwords | âŒ | âŒ | Not built: destructive and outside the brief. "Sign out everywhere" is per user. |
+| Own projects, tasks, dashboard, theme, reminders | ✅ | ✅ | Admins are users too; their own work is unchanged. |
+| Read or change other users' projects and tasks | ❌ 404 | ❌ 404 | The assignment requires that users only see their own data. Admin duties (accounts, security review) don't need task contents, so least privilege applies. |
+| List all accounts with project/task counts and last activity | ❌ 403 | ✅ | Needed to manage accounts; counts show activity without exposing content. |
+| Promote a user to admin / demote an admin | ❌ 403 | ✅ | Someone has to manage roles; letting users do it would be privilege escalation. |
+| Demote yourself | – | ❌ 409 | Prevents an accidental lock-out; another admin must do it. |
+| Demote the last admin | – | ❌ 409 | The system must always have someone who can manage roles. |
+| Read the system-wide audit log (filter by user / action) | ❌ 403 | ✅ | Accountability and incident review (e.g. who changed a role, suspicious sign-ins). |
+| Edit or delete audit entries | ❌ | ❌ | The log must be tamper-evident, even against admins. |
+| See passwords, password hashes or tokens | ❌ | ❌ | Never exposed by any endpoint; hashes and tokens are one-way. |
+| Delete accounts or reset passwords | ❌ | ❌ | Not built: destructive and outside the brief. "Sign out everywhere" is per user. |
 
 - The role is **read from the database on every admin request** (not trusted from the JWT), so a demotion takes effect immediately. Both apps also re-read the profile when they regain focus (web: also every minute and on any 403), so the Admin link appears or disappears without signing out.
 - Clients can never set a role: registration rejects unknown fields, and only an admin (or the server console) can change one.
@@ -78,16 +78,16 @@ Two roles: **USER** (everyone, by default) and **ADMIN**.
 
 ### Due-tomorrow reminders
 
-At 18:00 on the phone's own clock, the Android app gets a notification listing the open tasks due tomorrow ("2 tasks due tomorrow â€” Build pricing page, Write copy"). Tapping it opens the task (or the task list if there are several).
+At 18:00 on the phone's own clock, the Android app gets a notification listing the open tasks due tomorrow ("2 tasks due tomorrow — Build pricing page, Write copy"). Tapping it opens the task (or the task list if there are several).
 
-- **Push (APK):** after sign-in the phone registers its Expo push token and time zone (`POST /api/notifications/devices`). An hourly job (`POST /api/internal/reminders/run`, triggered by [`.github/workflows/reminders.yml`](.github/workflows/reminders.yml) or `REMINDER_SCHEDULER=true`) sends each phone at most one reminder per local day â€” each device is atomically claimed for the date before sending, so overlapping runs never double-send. Uninstalled apps' tokens are removed; transient failures are retried next hour.
+- **Push (APK):** after sign-in the phone registers its Expo push token and time zone (`POST /api/notifications/devices`). An hourly job (`POST /api/internal/reminders/run`, triggered by [`.github/workflows/reminders.yml`](.github/workflows/reminders.yml) or `REMINDER_SCHEDULER=true`) sends each phone at most one reminder per local day — each device is atomically claimed for the date before sending, so overlapping runs never double-send. Uninstalled apps' tokens are removed; transient failures are retried next hour.
 - **On-device fallback (Expo Go / no push setup):** Expo Go on Android does not support remote push, so the app schedules the same reminder locally from the tasks due tomorrow, refreshed whenever the app opens or a task changes.
-- Settings â†’ **Reminders**: on/off switch, delivery status and **Send test notification**. Signing out unregisters the phone; "Sign out everywhere" unregisters every phone.
+- Settings → **Reminders**: on/off switch, delivery status and **Send test notification**. Signing out unregisters the phone; "Sign out everywhere" unregisters every phone.
 - Push in the APK needs a one-time EAS + Firebase setup: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md#push-notifications).
 
 ## Screenshots
 
-| Web â€” tasks | Web â€” project detail | Android â€” dashboard | Android â€” tasks |
+| Web — tasks | Web — project detail | Android — dashboard | Android — tasks |
 |---|---|---|---|
 | ![](docs/screenshots/web-tasks.png) | ![](docs/screenshots/web-project-detail.png) | ![](docs/screenshots/android-dashboard.png) | ![](docs/screenshots/android-tasks.png) |
 
@@ -116,9 +116,9 @@ flowchart LR
   end
   W -- "/api/* (same origin via Vercel rewrite)" --> A
   M -- "HTTPS + X-Client: mobile" --> A
-  A["Express API<br/>helmet â†’ CORS â†’ rate limit â†’ JWT auth<br/>â†’ Zod validation â†’ controller â†’ service â†’ repository"]
+  A["Express API<br/>helmet → CORS → rate limit → JWT auth<br/>→ Zod validation → controller → service → repository"]
   A -- "Drizzle (parameterised SQL)" --> D[("PostgreSQL")]
-  S["packages/shared<br/>Zod schemas Â· enums Â· types"] -.-> W & M & A
+  S["packages/shared<br/>Zod schemas · enums · types"] -.-> W & M & A
 ```
 
 - **One API, two clients.** Both apps call the same endpoints. The only difference is how the refresh token travels: an HttpOnly cookie for the browser, the JSON body (stored in SecureStore) for the phone.
@@ -131,20 +131,20 @@ Details: [`docs/architecture/ARCHITECTURE.md`](docs/architecture/ARCHITECTURE.md
 
 ```
 apps/
-  api/        Express API â€” src/{config,controllers,routes,services,repositories,middleware,db,docs,utils,test}
-  web/        React + Vite web app â€” src/{pages,components,layouts,auth,lib}
-  mobile/     Expo Router app â€” app/ (screens and navigation), src/{components,lib}
+  api/        Express API — src/{config,controllers,routes,services,repositories,middleware,db,docs,utils,test}
+  web/        React + Vite web app — src/{pages,components,layouts,auth,lib}
+  mobile/     Expo Router app — app/ (screens and navigation), src/{components,lib}
 packages/
   shared/     Zod schemas, enums, API types, date helpers (used by all three apps)
 docs/         architecture, database (ER diagram), api (OpenAPI), security, testing, deployment, demo script, interview notes
-scripts/      verify-flow.mjs â€” runs the evaluator scenario against any running API
+scripts/      verify-flow.mjs — runs the evaluator scenario against any running API
 ```
 
 ## Database
 
 ![ER diagram](docs/database/ER-DIAGRAM.png)
 
-`users 1â”€N projects 1â”€N tasks`, plus `refresh_tokens`, `audit_logs` and `notification_devices` (each linked to its user); `users.role` is `USER` or `ADMIN`. UUID keys, foreign keys with `ON DELETE CASCADE`, Postgres enums for statuses and priorities, `CHECK (end_date >= start_date)`, unique index on `lower(email)`, and composite indexes that start with the owner column (`projects(user_id, status)`, `tasks(project_id, status)` â€¦). Tasks reach their owner through `projects.user_id`, so ownership is stored in exactly one place.
+`users 1─N projects 1─N tasks`, plus `refresh_tokens`, `audit_logs` and `notification_devices` (each linked to its user); `users.role` is `USER` or `ADMIN`. UUID keys, foreign keys with `ON DELETE CASCADE`, Postgres enums for statuses and priorities, `CHECK (end_date >= start_date)`, unique index on `lower(email)`, and composite indexes that start with the owner column (`projects(user_id, status)`, `tasks(project_id, status)` …). Tasks reach their owner through `projects.user_id`, so ownership is stored in exactly one place.
 
 Full schema, index rationale and normalisation notes: [`docs/database/SCHEMA.md`](docs/database/SCHEMA.md). Editable diagram source: [`ER-DIAGRAM.mmd`](docs/database/ER-DIAGRAM.mmd).
 
@@ -161,7 +161,7 @@ The database stores only a SHA-256 hash of each refresh token. Reusing a rotated
 
 ## Security
 
-- **Authorization:** every project and task query includes the owner condition in the SQL itself â€” `WHERE id = $1 AND user_id = $2` â€” including UPDATE and DELETE, so there is no check-then-write gap. Another user's IDs return **404**, indistinguishable from IDs that do not exist. A task's `projectId` from the request body is verified before any write.
+- **Authorization:** every project and task query includes the owner condition in the SQL itself — `WHERE id = $1 AND user_id = $2` — including UPDATE and DELETE, so there is no check-then-write gap. Another user's IDs return **404**, indistinguishable from IDs that do not exist. A task's `projectId` from the request body is verified before any write.
 - **Validation:** Zod on every body, query string and path parameter; unknown fields rejected (no mass assignment); enum, date, length and UUID checks; 100 KB body limit.
 - **SQL injection:** only parameterised queries through Drizzle; sort columns come from a whitelist; LIKE wildcards in searches are escaped.
 - **Passwords:** bcrypt (cost 12); a dummy hash is compared for unknown emails, so timing does not reveal which emails exist; the same error for wrong email and wrong password.
@@ -178,31 +178,31 @@ Checklist with file references: [`docs/SECURITY.md`](docs/SECURITY.md).
 
 | Method | Path | Auth | Purpose |
 |---|---|---|---|
-| POST | `/api/auth/register` | â€“ | Create account, start session |
-| POST | `/api/auth/login` | â€“ | Log in |
+| POST | `/api/auth/register` | – | Create account, start session |
+| POST | `/api/auth/login` | – | Log in |
 | POST | `/api/auth/refresh` | refresh token | Rotate session |
 | POST | `/api/auth/logout` | refresh token | Revoke session |
-| POST | `/api/auth/logout-all` | âœ“ | Revoke all sessions |
-| GET | `/api/auth/me` | âœ“ | Current user |
-| GET / POST | `/api/projects` | âœ“ | List (search, status, page, limit, sortBy, sortOrder) / create |
-| GET / PUT / PATCH / DELETE | `/api/projects/:id` | âœ“ | Read / replace / partial update / delete (cascades tasks) |
-| GET / POST | `/api/tasks` | âœ“ | List (search, status, priority, projectId, page, limit, sortBy, sortOrder) / create |
-| GET / PUT / PATCH / DELETE | `/api/tasks/:id` | âœ“ | Read / replace / partial update / delete |
-| GET | `/api/dashboard` | âœ“ | Statistics, recent projects, due-soon tasks |
-| GET | `/api/activity` | âœ“ | Audit log for the current user |
-| GET / POST / DELETE | `/api/notifications/devices` | âœ“ | List / register / unregister this phone for due-tomorrow reminders |
-| POST | `/api/notifications/test` | âœ“ | Send a test push to your phones |
+| POST | `/api/auth/logout-all` | ✓ | Revoke all sessions |
+| GET | `/api/auth/me` | ✓ | Current user |
+| GET / POST | `/api/projects` | ✓ | List (search, status, page, limit, sortBy, sortOrder) / create |
+| GET / PUT / PATCH / DELETE | `/api/projects/:id` | ✓ | Read / replace / partial update / delete (cascades tasks) |
+| GET / POST | `/api/tasks` | ✓ | List (search, status, priority, projectId, page, limit, sortBy, sortOrder) / create |
+| GET / PUT / PATCH / DELETE | `/api/tasks/:id` | ✓ | Read / replace / partial update / delete |
+| GET | `/api/dashboard` | ✓ | Statistics, recent projects, due-soon tasks |
+| GET | `/api/activity` | ✓ | Audit log for the current user |
+| GET / POST / DELETE | `/api/notifications/devices` | ✓ | List / register / unregister this phone for due-tomorrow reminders |
+| POST | `/api/notifications/test` | ✓ | Send a test push to your phones |
 | GET | `/api/admin/users` | ADMIN | All accounts with counts (search, role, page, limit) |
 | PATCH | `/api/admin/users/:id/role` | ADMIN | Promote / demote |
 | GET | `/api/admin/audit-logs` | ADMIN | System-wide audit log (userId, action, page, limit) |
 | POST | `/api/internal/reminders/run` | `CRON_SECRET` | Run the reminder job (for a scheduler) |
-| GET | `/api/health` | â€“ | Liveness + database check |
+| GET | `/api/health` | – | Liveness + database check |
 
-Responses: `{ "success": true, "data": â€¦ }` (lists add `meta: { page, limit, total, totalPages }`); errors: `{ "success": false, "error": { "code", "message", "details"? } }`.
+Responses: `{ "success": true, "data": … }` (lists add `meta: { page, limit, total, totalPages }`); errors: `{ "success": false, "error": { "code", "message", "details"? } }`.
 
 ## Local setup
 
-**Prerequisites:** Node.js 22 (or â‰¥ 20.19), npm 10+, PostgreSQL 14+ **or** Docker. For Android: a phone with **Expo Go** (a version that supports Expo SDK 57 â€” update it from the Play Store) or an Android Studio emulator.
+**Prerequisites:** Node.js 22 (or ≥ 20.19), npm 10+, PostgreSQL 14+ **or** Docker. For Android: a phone with **Expo Go** (a version that supports Expo SDK 57 — update it from the Play Store) or an Android Studio emulator.
 
 ```bash
 git clone https://github.com/Krishna-20-Git/Kriya.git
@@ -210,7 +210,7 @@ cd Kriya
 npm ci                                   # installs all workspaces from the lockfile
 npm run build:shared                     # compiles packages/shared (used by every app)
 
-# Database â€” pick one
+# Database — pick one
 createdb pms                             # local PostgreSQL
 docker compose up -d db                  # or Docker: PostgreSQL 16 on localhost:5432 (user/password postgres)
 
@@ -223,7 +223,7 @@ npm run db:seed                          # demo@example.com / Demo@12345 and (lo
 # Run
 npm run dev:api                          # http://localhost:4000  (Swagger: /api/docs)
 npm run dev:web                          # http://localhost:5173  (proxies /api to :4000)
-npm run dev:mobile                       # Expo â€” press "a" for the Android emulator
+npm run dev:mobile                       # Expo — press "a" for the Android emulator
 ```
 
 Open the web app at http://localhost:5173 and sign in with `demo@example.com` / `Demo@12345`.
@@ -232,60 +232,60 @@ Open the web app at http://localhost:5173 and sign in with `demo@example.com` / 
 
 **Test database** (only for `npm test`): `createdb pms_test`, or with Docker `docker compose exec db createdb -U postgres pms_test`.
 
-> Use `npm ci` (not `npm install`) with npm 10. If you change dependencies, regenerate the lockfile with npm 11 (`npx npm@11 install`) â€” npm 10 has a known resolver bug with this workspace layout.
+> Use `npm ci` (not `npm install`) with npm 10. If you change dependencies, regenerate the lockfile with npm 11 (`npx npm@11 install`) — npm 10 has a known resolver bug with this workspace layout.
 
 ## Environment variables
 
-**API â€” `apps/api/.env`** (full list with comments in [`.env.example`](apps/api/.env.example))
+**API — `apps/api/.env`** (full list with comments in [`.env.example`](apps/api/.env.example))
 
 | Variable | Required | Default | Purpose |
 |---|---|---|---|
-| `DATABASE_URL` | yes | â€“ | PostgreSQL connection string |
-| `JWT_ACCESS_SECRET` | yes | â€“ | HMAC secret for access tokens, â‰¥ 32 characters |
+| `DATABASE_URL` | yes | – | PostgreSQL connection string |
+| `JWT_ACCESS_SECRET` | yes | – | HMAC secret for access tokens, ≥ 32 characters |
 | `WEB_ORIGIN` | prod | `http://localhost:5173` | Comma-separated browser origins allowed by CORS |
-| `PORT` | â€“ | `4000` | |
-| `NODE_ENV` | â€“ | `development` | `production` enables secure cookies and JSON logs |
-| `DATABASE_SSL` | â€“ | `false` | `true` for Neon / Render / Supabase |
-| `TRUST_PROXY` | â€“ | `0` | Number of proxies in front of the API (`2` for Vercel â†’ Render) |
-| `ACCESS_TOKEN_TTL_SECONDS` | â€“ | `900` | Lower it (e.g. `30`) to demonstrate expiry handling |
-| `REFRESH_TOKEN_TTL_DAYS` | â€“ | `7` | Sliding session length |
-| `COOKIE_SAMESITE` / `COOKIE_SECURE` | â€“ | `lax` / auto | Refresh-cookie attributes |
-| `BCRYPT_ROUNDS` | â€“ | `12` | |
-| `RATE_LIMIT_*` | â€“ | see file | Login (per IP and per account), register, refresh, API |
-| `REMINDER_HOUR` | â€“ | `18` | Local hour (phone's clock) for due-tomorrow reminders |
-| `REMINDER_SCHEDULER` | â€“ | `false` | Run the reminder job in-process every 15 min |
-| `CRON_SECRET` | â€“ | unset | Enables `POST /api/internal/reminders/run` for an external scheduler (â‰¥ 32 chars) |
-| `EXPO_ACCESS_TOKEN` | â€“ | unset | Only if Expo "enhanced push security" is on |
-| `SEED_ADMIN_PASSWORD` | â€“ | unset | Seed only: password for `admin@example.com` on a non-local database (locally the seed uses `Admin@12345`) |
-| `TEST_DATABASE_URL` | â€“ | `â€¦/pms_test` | Tests only: the database the API test suite rebuilds |
+| `PORT` | – | `4000` | |
+| `NODE_ENV` | – | `development` | `production` enables secure cookies and JSON logs |
+| `DATABASE_SSL` | – | `false` | `true` for Neon / Render / Supabase |
+| `TRUST_PROXY` | – | `0` | Number of proxies in front of the API (`2` for Vercel → Render) |
+| `ACCESS_TOKEN_TTL_SECONDS` | – | `900` | Lower it (e.g. `30`) to demonstrate expiry handling |
+| `REFRESH_TOKEN_TTL_DAYS` | – | `7` | Sliding session length |
+| `COOKIE_SAMESITE` / `COOKIE_SECURE` | – | `lax` / auto | Refresh-cookie attributes |
+| `BCRYPT_ROUNDS` | – | `12` | |
+| `RATE_LIMIT_*` | – | see file | Login (per IP and per account), register, refresh, API |
+| `REMINDER_HOUR` | – | `18` | Local hour (phone's clock) for due-tomorrow reminders |
+| `REMINDER_SCHEDULER` | – | `false` | Run the reminder job in-process every 15 min |
+| `CRON_SECRET` | – | unset | Enables `POST /api/internal/reminders/run` for an external scheduler (≥ 32 chars) |
+| `EXPO_ACCESS_TOKEN` | – | unset | Only if Expo "enhanced push security" is on |
+| `SEED_ADMIN_PASSWORD` | – | unset | Seed only: password for `admin@example.com` on a non-local database (locally the seed uses `Admin@12345`) |
+| `TEST_DATABASE_URL` | – | `…/pms_test` | Tests only: the database the API test suite rebuilds |
 
 There is deliberately **no `JWT_REFRESH_SECRET`**: refresh tokens are random opaque strings checked against the database (so they can be revoked), not JWTs.
 
-**Web â€” `apps/web/.env`** (optional; [`.env.example`](apps/web/.env.example))
+**Web — `apps/web/.env`** (optional; [`.env.example`](apps/web/.env.example))
 
 | Variable | Default | Purpose |
 |---|---|---|
 | `VITE_API_URL` | empty | Leave empty: the app calls `/api` on its own origin (Vite proxy locally, Vercel rewrite in production) |
 | `API_PROXY_TARGET` | `http://localhost:4000` | Where the Vite dev server forwards `/api` |
 
-**Mobile â€” `apps/mobile/.env`** ([`.env.example`](apps/mobile/.env.example)) â€” `EXPO_PUBLIC_*` values are built into the app, so never put secrets here; restart Expo with `npx expo start -c` after changing them.
+**Mobile — `apps/mobile/.env`** ([`.env.example`](apps/mobile/.env.example)) — `EXPO_PUBLIC_*` values are built into the app, so never put secrets here; restart Expo with `npx expo start -c` after changing them.
 
 | Variable | Required | Purpose |
 |---|---|---|
-| `EXPO_PUBLIC_API_URL` | yes | Base URL of the API â€” the same backend as the web app (see the table below) |
+| `EXPO_PUBLIC_API_URL` | yes | Base URL of the API — the same backend as the web app (see the table below) |
 | `EXPO_PUBLIC_WEB_URL` | no | The web app's address; admins get an "Open Admin on the web" button in Settings |
 
 For APK builds the same variables are set per profile in [`apps/mobile/eas.json`](apps/mobile/eas.json).
 
 ## Running the mobile app
 
-The app talks to whatever `EXPO_PUBLIC_API_URL` points at â€” the same API as the web app.
+The app talks to whatever `EXPO_PUBLIC_API_URL` points at — the same API as the web app.
 
 | Target | `EXPO_PUBLIC_API_URL` |
 |---|---|
-| Android emulator â†’ local API | `http://10.0.2.2:4000` (the emulator's alias for your computer) |
-| Phone with Expo Go â†’ local API | `http://<your-computer-LAN-IP>:4000` (same Wi-Fi) |
-| Anything â†’ deployed API | `https://<your-api>.onrender.com` |
+| Android emulator → local API | `http://10.0.2.2:4000` (the emulator's alias for your computer) |
+| Phone with Expo Go → local API | `http://<your-computer-LAN-IP>:4000` (same Wi-Fi) |
+| Anything → deployed API | `https://<your-api>.onrender.com` |
 
 ```bash
 cd apps/mobile
@@ -293,13 +293,13 @@ cp .env.example .env          # set EXPO_PUBLIC_API_URL
 npx expo start                # scan the QR code with Expo Go, or press "a"
 ```
 
-**Phone on the same Wi-Fi:** find your computer's address with `ipconfig` (Windows) or `ipconfig getifaddr en0` (macOS) â€” use the Wi-Fi adapter, not virtual ones such as WSL/Docker â€” and check it from the phone's browser first: `http://<ip>:4000/api/health` must show `"status":"ok"`. Windows may also need the network set to *Private* (Settings â†’ Network) so the firewall lets the phone connect.
+**Phone on the same Wi-Fi:** find your computer's address with `ipconfig` (Windows) or `ipconfig getifaddr en0` (macOS) — use the Wi-Fi adapter, not virtual ones such as WSL/Docker — and check it from the phone's browser first: `http://<ip>:4000/api/health` must show `"status":"ok"`. Windows may also need the network set to *Private* (Settings → Network) so the firewall lets the phone connect.
 
 ### Running the mobile app against the deployed backend
 
-No local server is needed â€” only the deployed API URL.
+No local server is needed — only the deployed API URL.
 
-1. **With Expo Go (quickest):** in `apps/mobile/.env` set `EXPO_PUBLIC_API_URL=https://<your-api>.onrender.com`, run `npx expo start -c`, scan the QR code. Settings â†’ Connection shows the API URL the app is using.
+1. **With Expo Go (quickest):** in `apps/mobile/.env` set `EXPO_PUBLIC_API_URL=https://<your-api>.onrender.com`, run `npx expo start -c`, scan the QR code. Settings → Connection shows the API URL the app is using.
 2. **As an installed APK:** set the same URL in `apps/mobile/eas.json` (`preview` profile) and build it (below). The APK then works on any network.
 
 Free Render instances sleep when idle: open `https://<your-api>.onrender.com/api/health` once before testing, or the first request may take up to a minute.
@@ -311,7 +311,7 @@ npm i -g eas-cli && eas login
 cd apps/mobile && eas build --platform android --profile preview
 ```
 
-EAS prints a download link for the `.apk` â€” that link (or the file) is the Android submission. Step-by-step: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md#4-android-apk).
+EAS prints a download link for the `.apk` — that link (or the file) is the Android submission. Step-by-step: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md#4-android-apk).
 
 ## Testing
 
@@ -342,11 +342,11 @@ The image is multi-stage: TypeScript is compiled in a build stage and the runtim
 
 ## Deployment
 
-Recommended free setup â€” **Neon** (PostgreSQL) + **Render** (API) + **Vercel** (web) + **EAS** (APK):
+Recommended free setup — **Neon** (PostgreSQL) + **Render** (API) + **Vercel** (web) + **EAS** (APK):
 
 1. **Database:** create a Neon project; copy the connection string.
-2. **API on Render:** New â†’ Blueprint â†’ this repo (uses [`render.yaml`](render.yaml)). Set `DATABASE_URL` and `WEB_ORIGIN`. Migrations run on start. Seed once from your machine: `DATABASE_URL=<neon-url> DATABASE_SSL=true npm run db:seed`.
-3. **Web on Vercel:** import the repo, root directory `apps/web`, framework Vite. In [`apps/web/vercel.json`](apps/web/vercel.json) replace `REPLACE-WITH-YOUR-API` with the Render hostname â€” Vercel then serves `/api` on the web app's own domain, so the refresh cookie is first-party.
+2. **API on Render:** New → Blueprint → this repo (uses [`render.yaml`](render.yaml)). Set `DATABASE_URL` and `WEB_ORIGIN`. Migrations run on start. Seed once from your machine: `DATABASE_URL=<neon-url> DATABASE_SSL=true npm run db:seed`.
+3. **Web on Vercel:** import the repo, root directory `apps/web`, framework Vite. In [`apps/web/vercel.json`](apps/web/vercel.json) replace `REPLACE-WITH-YOUR-API` with the Render hostname — Vercel then serves `/api` on the web app's own domain, so the refresh cookie is first-party.
 4. **APK:** put the Render URL in `apps/mobile/eas.json` and run `eas build` (above).
 5. **Check it:** `node scripts/verify-flow.mjs https://<your-api>.onrender.com` should print 29 passed.
 
@@ -354,31 +354,31 @@ Exact settings and gotchas (Render cold starts, cookie settings without the prox
 
 ## Cross-platform demo
 
-Five-minute script with timings: [`docs/DEMO_SCRIPT.md`](docs/DEMO_SCRIPT.md). In short: log in on web â†’ create a project and a task â†’ log in on Android with the same account â†’ pull to refresh, the task is there â†’ change its status and priority on the phone â†’ refresh the web page, the change is there.
+Five-minute script with timings: [`docs/DEMO_SCRIPT.md`](docs/DEMO_SCRIPT.md). In short: log in on web → create a project and a task → log in on Android with the same account → pull to refresh, the task is there → change its status and priority on the phone → refresh the web page, the change is there.
 
 ## Troubleshooting
 
 | Symptom | Fix |
 |---|---|
-| `Invalid environment configuration` on API start | A required variable is missing or too short â€” the message names it. |
+| `Invalid environment configuration` on API start | A required variable is missing or too short — the message names it. |
 | Web shows "Unable to connect to the server" | API not running on :4000, or `API_PROXY_TARGET` points elsewhere. |
 | Android shows "Unable to connect to the server" | Emulator must use `10.0.2.2`, not `localhost`; a phone must use your computer's LAN IP; restart Expo after editing `.env`. |
 | First request after a while takes ~50 s | Render's free tier sleeps. Open `/api/health` before a demo. |
 | Login works but a refresh logs you out (web, deployed) | The `/api` rewrite in `apps/web/vercel.json` was not updated, so the cookie is cross-site. |
-| `npm install` fails with `Cannot read properties of null (reading 'edgesOut')` | npm 10 resolver bug â€” use `npm ci`, or `npx npm@11 install`. |
+| `npm install` fails with `Cannot read properties of null (reading 'edgesOut')` | npm 10 resolver bug — use `npm ci`, or `npx npm@11 install`. |
 | API tests fail to start | Create the test database: `createdb pms_test` (or set `TEST_DATABASE_URL`). |
-| `does not provide an export named â€¦` when starting the API | The shared package is out of date: `npm run build:shared` (the `dev:*` and `db:*` scripts do this automatically). |
+| `does not provide an export named …` when starting the API | The shared package is out of date: `npm run build:shared` (the `dev:*` and `db:*` scripts do this automatically). |
 | `port is already allocated` from Docker | Another PostgreSQL uses 5432: change the host port in `docker-compose.yml` and in `DATABASE_URL`. |
 | Phone worked yesterday, now "Unable to connect" | Your computer's Wi-Fi IP changed: run `ipconfig`, update `EXPO_PUBLIC_API_URL`, then `npx expo start -c` and scan the new QR code. |
 | Expo Go says the project is incompatible | Update Expo Go from the Play Store (the app uses Expo SDK 57). |
 
 ## Known limitations
 
-- Access tokens are stateless: after logout an already-issued access token stays valid until it expires (â‰¤ 15 minutes). Refresh tokens are revoked immediately.
-- Changes appear on the other platform after a refresh, pull-to-refresh or returning to the app/tab â€” not instantly (no WebSockets).
+- Access tokens are stateless: after logout an already-issued access token stays valid until it expires (≤ 15 minutes). Refresh tokens are revoked immediately.
+- Changes appear on the other platform after a refresh, pull-to-refresh or returning to the app/tab — not instantly (no WebSockets).
 - The admin area is web-only by design (rare, high-risk, detail-heavy work belongs on the web console). Android shows the role, and admins get an **Administration** card in Settings that opens the web Admin page (`EXPO_PUBLIC_WEB_URL`).
 - In Expo Go, reminders are scheduled on the phone (Expo Go cannot receive remote push on Android); server push works in the APK after the EAS/Firebase setup.
-- The per-account login limit can be used to temporarily lock an account (15 minutes) â€” the usual trade-off of account-based throttling.
+- The per-account login limit can be used to temporarily lock an account (15 minutes) — the usual trade-off of account-based throttling.
 - The Android Projects tab and the task form's project picker (both apps) load the 100 most recent projects; the web Projects page is fully paginated.
 - See [`docs/SECURITY.md`](docs/SECURITY.md#accepted-trade-offs) for the security trade-offs (proxy headers and per-IP limits, refresh tokens on very unreliable networks).
 - The Docker image and the CI workflow were written and their steps replayed outside Docker during development; run `docker compose up --build` once on your machine to confirm.
