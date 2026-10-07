@@ -6,8 +6,9 @@ A project and task manager with a **React web app** and a **React Native (Expo) 
 
 | | |
 |---|---|
-| **Web app** | `https://<your-app>.vercel.app` — *fill in after deploying (see [Deployment](#deployment))* |
-| **API** | `https://<your-api>.onrender.com` · Swagger: `/api/docs` |
+| **Source** | https://github.com/Krishna-20-Git/Kriya |
+| **Web app** | https://kriya-eosin.vercel.app |
+| **API** | https://pms-api-lyg7.onrender.com · Swagger: https://pms-api-lyg7.onrender.com/api/docs |
 | **Android** | APK built with EAS — *link after building* |
 | **Demo account** | `demo@example.com` / `Demo@12345` (test data only) |
 | **Admin account** | Local: `admin@example.com` / `Admin@12345`. Deployed: same email, password shared privately with the evaluators (never published — see [RBAC](#role-based-access-control)) |
@@ -143,7 +144,7 @@ scripts/      verify-flow.mjs — runs the evaluator scenario against any runnin
 
 ![ER diagram](docs/database/ER-DIAGRAM.png)
 
-`users 1─N projects 1─N tasks`, plus `refresh_tokens` and `audit_logs`. UUID keys, foreign keys with `ON DELETE CASCADE`, Postgres enums for statuses and priorities, `CHECK (end_date >= start_date)`, unique index on `lower(email)`, and composite indexes that start with the owner column (`projects(user_id, status)`, `tasks(project_id, status)` …). Tasks reach their owner through `projects.user_id`, so ownership is stored in exactly one place.
+`users 1─N projects 1─N tasks`, plus `refresh_tokens`, `audit_logs` and `notification_devices` (each linked to its user); `users.role` is `USER` or `ADMIN`. UUID keys, foreign keys with `ON DELETE CASCADE`, Postgres enums for statuses and priorities, `CHECK (end_date >= start_date)`, unique index on `lower(email)`, and composite indexes that start with the owner column (`projects(user_id, status)`, `tasks(project_id, status)` …). Tasks reach their owner through `projects.user_id`, so ownership is stored in exactly one place.
 
 Full schema, index rationale and normalisation notes: [`docs/database/SCHEMA.md`](docs/database/SCHEMA.md). Editable diagram source: [`ER-DIAGRAM.mmd`](docs/database/ER-DIAGRAM.mmd).
 
@@ -189,23 +190,33 @@ Checklist with file references: [`docs/SECURITY.md`](docs/SECURITY.md).
 | GET / PUT / PATCH / DELETE | `/api/tasks/:id` | ✓ | Read / replace / partial update / delete |
 | GET | `/api/dashboard` | ✓ | Statistics, recent projects, due-soon tasks |
 | GET | `/api/activity` | ✓ | Audit log for the current user |
+| GET / POST / DELETE | `/api/notifications/devices` | ✓ | List / register / unregister this phone for due-tomorrow reminders |
+| POST | `/api/notifications/test` | ✓ | Send a test push to your phones |
+| GET | `/api/admin/users` | ADMIN | All accounts with counts (search, role, page, limit) |
+| PATCH | `/api/admin/users/:id/role` | ADMIN | Promote / demote |
+| GET | `/api/admin/audit-logs` | ADMIN | System-wide audit log (userId, action, page, limit) |
+| POST | `/api/internal/reminders/run` | `CRON_SECRET` | Run the reminder job (for a scheduler) |
 | GET | `/api/health` | – | Liveness + database check |
 
 Responses: `{ "success": true, "data": … }` (lists add `meta: { page, limit, total, totalPages }`); errors: `{ "success": false, "error": { "code", "message", "details"? } }`.
 
 ## Local setup
 
-**Prerequisites:** Node.js 22 (or ≥ 20.19), npm 10+, PostgreSQL 14+ (or Docker). For Android: Android Studio emulator or a phone with Expo Go.
+**Prerequisites:** Node.js 22 (or ≥ 20.19), npm 10+, PostgreSQL 14+ **or** Docker. For Android: a phone with **Expo Go** (a version that supports Expo SDK 57 — update it from the Play Store) or an Android Studio emulator.
 
 ```bash
-git clone https://github.com/<you>/project-management-system.git
-cd project-management-system
+git clone https://github.com/Krishna-20-Git/Kriya.git
+cd Kriya
 npm ci                                   # installs all workspaces from the lockfile
 npm run build:shared                     # compiles packages/shared (used by every app)
 
-# Database
-createdb pms                             # or: docker compose up db -d
-cp apps/api/.env.example apps/api/.env   # then set JWT_ACCESS_SECRET (command in the file)
+# Database — pick one
+createdb pms                             # local PostgreSQL
+docker compose up -d db                  # or Docker: PostgreSQL 16 on localhost:5432 (user/password postgres)
+
+cp apps/api/.env.example apps/api/.env   # DATABASE_URL already matches both options above
+node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"
+                                         # paste the output as JWT_ACCESS_SECRET in apps/api/.env
 npm run db:migrate                       # applies apps/api/drizzle/*.sql
 npm run db:seed                          # demo@example.com / Demo@12345 and (local only) admin@example.com / Admin@12345
 
@@ -214,6 +225,12 @@ npm run dev:api                          # http://localhost:4000  (Swagger: /api
 npm run dev:web                          # http://localhost:5173  (proxies /api to :4000)
 npm run dev:mobile                       # Expo — press "a" for the Android emulator
 ```
+
+Open the web app at http://localhost:5173 and sign in with `demo@example.com` / `Demo@12345`.
+
+**Windows (PowerShell):** the same commands work; use `Copy-Item apps/api/.env.example apps/api/.env` if `cp` is unavailable. If port 5432 is already taken by another PostgreSQL, change the left side of `ports` in `docker-compose.yml` (e.g. `'5433:5432'`) and the port in `DATABASE_URL` to match.
+
+**Test database** (only for `npm test`): `createdb pms_test`, or with Docker `docker compose exec db createdb -U postgres pms_test`.
 
 > Use `npm ci` (not `npm install`) with npm 10. If you change dependencies, regenerate the lockfile with npm 11 (`npx npm@11 install`) — npm 10 has a known resolver bug with this workspace layout.
 
@@ -239,11 +256,26 @@ npm run dev:mobile                       # Expo — press "a" for the Android em
 | `REMINDER_SCHEDULER` | – | `false` | Run the reminder job in-process every 15 min |
 | `CRON_SECRET` | – | unset | Enables `POST /api/internal/reminders/run` for an external scheduler (≥ 32 chars) |
 | `EXPO_ACCESS_TOKEN` | – | unset | Only if Expo "enhanced push security" is on |
+| `SEED_ADMIN_PASSWORD` | – | unset | Seed only: password for `admin@example.com` on a non-local database (locally the seed uses `Admin@12345`) |
+| `TEST_DATABASE_URL` | – | `…/pms_test` | Tests only: the database the API test suite rebuilds |
 
 There is deliberately **no `JWT_REFRESH_SECRET`**: refresh tokens are random opaque strings checked against the database (so they can be revoked), not JWTs.
 
-**Web — `apps/web/.env`**: `VITE_API_URL` — leave empty to use the same-origin `/api` proxy (recommended).
-**Mobile — `apps/mobile/.env`**: `EXPO_PUBLIC_API_URL` — base URL of the API (see below); optional `EXPO_PUBLIC_WEB_URL` — the web app's address, for the admin "Open Admin on the web" button.
+**Web — `apps/web/.env`** (optional; [`.env.example`](apps/web/.env.example))
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `VITE_API_URL` | empty | Leave empty: the app calls `/api` on its own origin (Vite proxy locally, Vercel rewrite in production) |
+| `API_PROXY_TARGET` | `http://localhost:4000` | Where the Vite dev server forwards `/api` |
+
+**Mobile — `apps/mobile/.env`** ([`.env.example`](apps/mobile/.env.example)) — `EXPO_PUBLIC_*` values are built into the app, so never put secrets here; restart Expo with `npx expo start -c` after changing them.
+
+| Variable | Required | Purpose |
+|---|---|---|
+| `EXPO_PUBLIC_API_URL` | yes | Base URL of the API — the same backend as the web app (see the table below) |
+| `EXPO_PUBLIC_WEB_URL` | no | The web app's address; admins get an "Open Admin on the web" button in Settings |
+
+For APK builds the same variables are set per profile in [`apps/mobile/eas.json`](apps/mobile/eas.json).
 
 ## Running the mobile app
 
@@ -260,6 +292,17 @@ cd apps/mobile
 cp .env.example .env          # set EXPO_PUBLIC_API_URL
 npx expo start                # scan the QR code with Expo Go, or press "a"
 ```
+
+**Phone on the same Wi-Fi:** find your computer's address with `ipconfig` (Windows) or `ipconfig getifaddr en0` (macOS) — use the Wi-Fi adapter, not virtual ones such as WSL/Docker — and check it from the phone's browser first: `http://<ip>:4000/api/health` must show `"status":"ok"`. Windows may also need the network set to *Private* (Settings → Network) so the firewall lets the phone connect.
+
+### Running the mobile app against the deployed backend
+
+No local server is needed — only the deployed API URL.
+
+1. **With Expo Go (quickest):** in `apps/mobile/.env` set `EXPO_PUBLIC_API_URL=https://<your-api>.onrender.com`, run `npx expo start -c`, scan the QR code. Settings → Connection shows the API URL the app is using.
+2. **As an installed APK:** set the same URL in `apps/mobile/eas.json` (`preview` profile) and build it (below). The APK then works on any network.
+
+Free Render instances sleep when idle: open `https://<your-api>.onrender.com/api/health` once before testing, or the first request may take up to a minute.
 
 **Building the APK against the deployed backend:** set the URL in `apps/mobile/eas.json` (`preview` profile), then:
 
@@ -324,6 +367,10 @@ Five-minute script with timings: [`docs/DEMO_SCRIPT.md`](docs/DEMO_SCRIPT.md). I
 | Login works but a refresh logs you out (web, deployed) | The `/api` rewrite in `apps/web/vercel.json` was not updated, so the cookie is cross-site. |
 | `npm install` fails with `Cannot read properties of null (reading 'edgesOut')` | npm 10 resolver bug — use `npm ci`, or `npx npm@11 install`. |
 | API tests fail to start | Create the test database: `createdb pms_test` (or set `TEST_DATABASE_URL`). |
+| `does not provide an export named …` when starting the API | The shared package is out of date: `npm run build:shared` (the `dev:*` and `db:*` scripts do this automatically). |
+| `port is already allocated` from Docker | Another PostgreSQL uses 5432: change the host port in `docker-compose.yml` and in `DATABASE_URL`. |
+| Phone worked yesterday, now "Unable to connect" | Your computer's Wi-Fi IP changed: run `ipconfig`, update `EXPO_PUBLIC_API_URL`, then `npx expo start -c` and scan the new QR code. |
+| Expo Go says the project is incompatible | Update Expo Go from the Play Store (the app uses Expo SDK 57). |
 
 ## Known limitations
 

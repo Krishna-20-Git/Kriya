@@ -8,7 +8,8 @@
     "android": "expo start --android",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "export:android": "expo export --platform android --output-dir dist-android",
-    "build:apk": "eas build --platform android --profile preview"
+    "build:apk": "eas build --platform android --profile preview",
+    "eas-build-post-install": "cd ../.. && npm run build:shared"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",

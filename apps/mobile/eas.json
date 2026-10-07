@@ -20,8 +20,8 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://REPLACE-WITH-YOUR-API.onrender.com",
-        "EXPO_PUBLIC_WEB_URL": "https://REPLACE-WITH-YOUR-APP.vercel.app"
+        "EXPO_PUBLIC_API_URL": "https://pms-api-lyg7.onrender.com",
+        "EXPO_PUBLIC_WEB_URL": "https://kriya-eosin.vercel.app"
       }
     },
     "production": {
@@ -29,8 +29,8 @@
         "buildType": "app-bundle"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://REPLACE-WITH-YOUR-API.onrender.com",
-        "EXPO_PUBLIC_WEB_URL": "https://REPLACE-WITH-YOUR-APP.vercel.app"
+        "EXPO_PUBLIC_API_URL": "https://pms-api-lyg7.onrender.com",
+        "EXPO_PUBLIC_WEB_URL": "https://kriya-eosin.vercel.app"
       }
     }
   }
