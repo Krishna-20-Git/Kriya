@@ -111,4 +111,4 @@ Extra endpoints beyond the minimum: `PATCH /api/projects/{id}` and `PATCH /api/t
 - [x] Web deployment URL
 - [x] Backend deployment URL
 - [x] Android APK
-- [ ] 5-minute screen recording (`docs/DEMO_SCRIPT.md`)
+- [x] 5-minute screen recording (`docs/DEMO_SCRIPT.md`)
