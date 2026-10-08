@@ -9,7 +9,7 @@ A project and task manager with a **React web app** and a **React Native (Expo) 
 | **Source** | https://github.com/Krishna-20-Git/Kriya |
 | **Web app** | https://kriya-eosin.vercel.app |
 | **API** | https://pms-api-lyg7.onrender.com · Swagger: https://pms-api-lyg7.onrender.com/api/docs |
-| **Android** | [Download the APK](https://expo.dev/accounts/krishna20/projects/kriya-pms/builds/93444ab8-4813-47db-8e62-34cebcd7037d) (Expo build page — scan the QR code or tap Install on the phone) |
+| **Android** | [Download kriya.apk](https://github.com/Krishna-20-Git/Kriya/releases/download/v1.0.0/kriya.apk) (GitHub Release — open on an Android phone and install) |
 | **Demo account** | `demo@example.com` / `Demo@12345` (test data only) |
 | **Admin account** | Local: `admin@example.com` / `Admin@12345`. Deployed: same email, password shared privately with the evaluators (never published — see [RBAC](#role-based-access-control)) |
 
