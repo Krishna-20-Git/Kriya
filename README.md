@@ -9,7 +9,7 @@ A project and task manager with a **React web app** and a **React Native (Expo) 
 | **Source** | https://github.com/Krishna-20-Git/Kriya |
 | **Web app** | https://kriya-eosin.vercel.app |
 | **API** | https://pms-api-lyg7.onrender.com · Swagger: https://pms-api-lyg7.onrender.com/api/docs |
-| **Android** | [Download kriya.apk](https://github.com/Krishna-20-Git/Kriya/releases/download/v1.0.0/kriya.apk) (GitHub Release — open on an Android phone and install) |
+| **Android** | [Download the APK](https://expo.dev/accounts/krishna20/projects/kriya-pms/builds/93444ab8-4813-47db-8e62-34cebcd7037d) (Expo build page — scan the QR code or tap Install on the phone) |
 | **Demo account** | `demo@example.com` / `Demo@12345` (test data only) |
 | **Admin account** | Local: `admin@example.com` / `Admin@12345`. Deployed: same email, password shared privately with the evaluators (never published — see [RBAC](#role-based-access-control)) |
 
@@ -58,16 +58,16 @@ Two roles: **USER** (everyone, by default) and **ADMIN**.
 
 | Capability | USER | ADMIN | Why |
 |---|---|---|---|
-| Own projects, tasks, dashboard, theme, reminders | ✅ | ✅ | Admins are users too; their own work is unchanged. |
-| Read or change other users' projects and tasks | ❌ 404 | ❌ 404 | The assignment requires that users only see their own data. Admin duties (accounts, security review) don't need task contents, so least privilege applies. |
-| List all accounts with project/task counts and last activity | ❌ 403 | ✅ | Needed to manage accounts; counts show activity without exposing content. |
-| Promote a user to admin / demote an admin | ❌ 403 | ✅ | Someone has to manage roles; letting users do it would be privilege escalation. |
-| Demote yourself | – | ❌ 409 | Prevents an accidental lock-out; another admin must do it. |
-| Demote the last admin | – | ❌ 409 | The system must always have someone who can manage roles. |
-| Read the system-wide audit log (filter by user / action) | ❌ 403 | ✅ | Accountability and incident review (e.g. who changed a role, suspicious sign-ins). |
-| Edit or delete audit entries | ❌ | ❌ | The log must be tamper-evident, even against admins. |
-| See passwords, password hashes or tokens | ❌ | ❌ | Never exposed by any endpoint; hashes and tokens are one-way. |
-| Delete accounts or reset passwords | ❌ | ❌ | Not built: destructive and outside the brief. "Sign out everywhere" is per user. |
+| Own projects, tasks, dashboard, theme, reminders | Yes | Yes | Admins are users too; their own work is unchanged. |
+| Read or change other users' projects and tasks | No (404) | No (404) | The assignment requires that users only see their own data. Admin duties (accounts, security review) don't need task contents, so least privilege applies. |
+| List all accounts with project/task counts and last activity | No (403) | Yes | Needed to manage accounts; counts show activity without exposing content. |
+| Promote a user to admin / demote an admin | No (403) | Yes | Someone has to manage roles; letting users do it would be privilege escalation. |
+| Demote yourself | – | No (409) | Prevents an accidental lock-out; another admin must do it. |
+| Demote the last admin | – | No (409) | The system must always have someone who can manage roles. |
+| Read the system-wide audit log (filter by user / action) | No (403) | Yes | Accountability and incident review (e.g. who changed a role, suspicious sign-ins). |
+| Edit or delete audit entries | No | No | The log must be tamper-evident, even against admins. |
+| See passwords, password hashes or tokens | No | No | Never exposed by any endpoint; hashes and tokens are one-way. |
+| Delete accounts or reset passwords | No | No | Not built: destructive and outside the brief. "Sign out everywhere" is per user. |
 
 - The role is **read from the database on every admin request** (not trusted from the JWT), so a demotion takes effect immediately. Both apps also re-read the profile when they regain focus (web: also every minute and on any 403), so the Admin link appears or disappears without signing out.
 - Clients can never set a role: registration rejects unknown fields, and only an admin (or the server console) can change one.
@@ -182,16 +182,16 @@ Checklist with file references: [`docs/SECURITY.md`](docs/SECURITY.md).
 | POST | `/api/auth/login` | – | Log in |
 | POST | `/api/auth/refresh` | refresh token | Rotate session |
 | POST | `/api/auth/logout` | refresh token | Revoke session |
-| POST | `/api/auth/logout-all` | ✓ | Revoke all sessions |
-| GET | `/api/auth/me` | ✓ | Current user |
-| GET / POST | `/api/projects` | ✓ | List (search, status, page, limit, sortBy, sortOrder) / create |
-| GET / PUT / PATCH / DELETE | `/api/projects/:id` | ✓ | Read / replace / partial update / delete (cascades tasks) |
-| GET / POST | `/api/tasks` | ✓ | List (search, status, priority, projectId, page, limit, sortBy, sortOrder) / create |
-| GET / PUT / PATCH / DELETE | `/api/tasks/:id` | ✓ | Read / replace / partial update / delete |
-| GET | `/api/dashboard` | ✓ | Statistics, recent projects, due-soon tasks |
-| GET | `/api/activity` | ✓ | Audit log for the current user |
-| GET / POST / DELETE | `/api/notifications/devices` | ✓ | List / register / unregister this phone for due-tomorrow reminders |
-| POST | `/api/notifications/test` | ✓ | Send a test push to your phones |
+| POST | `/api/auth/logout-all` | Bearer token | Revoke all sessions |
+| GET | `/api/auth/me` | Bearer token | Current user |
+| GET / POST | `/api/projects` | Bearer token | List (search, status, page, limit, sortBy, sortOrder) / create |
+| GET / PUT / PATCH / DELETE | `/api/projects/:id` | Bearer token | Read / replace / partial update / delete (cascades tasks) |
+| GET / POST | `/api/tasks` | Bearer token | List (search, status, priority, projectId, page, limit, sortBy, sortOrder) / create |
+| GET / PUT / PATCH / DELETE | `/api/tasks/:id` | Bearer token | Read / replace / partial update / delete |
+| GET | `/api/dashboard` | Bearer token | Statistics, recent projects, due-soon tasks |
+| GET | `/api/activity` | Bearer token | Audit log for the current user |
+| GET / POST / DELETE | `/api/notifications/devices` | Bearer token | List / register / unregister this phone for due-tomorrow reminders |
+| POST | `/api/notifications/test` | Bearer token | Send a test push to your phones |
 | GET | `/api/admin/users` | ADMIN | All accounts with counts (search, role, page, limit) |
 | PATCH | `/api/admin/users/:id/role` | ADMIN | Promote / demote |
 | GET | `/api/admin/audit-logs` | ADMIN | System-wide audit log (userId, action, page, limit) |

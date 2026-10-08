@@ -8,7 +8,7 @@ Base URL: `http://localhost:4000` locally, or your deployed API.
 ## Conventions
 
 - JSON in, JSON out. Dates: `YYYY-MM-DD` for calendar dates, ISO-8601 for timestamps.
-- Authenticated endpoints need `Authorization: Bearer <accessToken>`.
+- Every endpoint needs `Authorization: Bearer <accessToken>` except register, login, refresh, logout, health and the internal reminder trigger. Admin endpoints also need the ADMIN role.
 - Success: `{ "success": true, "data": … }`. Lists: `{ "success": true, "data": [ … ], "meta": { "page", "limit", "total", "totalPages" } }`.
 - Errors: `{ "success": false, "error": { "code", "message", "details"?: [{ "path", "message" }], "requestId" } }`. Codes: [ARCHITECTURE.md](../architecture/ARCHITECTURE.md#error-contract).
 - Unknown body fields are rejected (`400`). Another user's resource returns `404`, exactly like a missing one.
@@ -45,13 +45,13 @@ Web: no body (the cookie is sent automatically). Mobile: `X-Client: mobile` and 
 ### POST /api/auth/logout
 Revokes the session's refresh tokens and clears the cookie. Idempotent. `204`.
 
-### POST /api/auth/logout-all 🔒
+### POST /api/auth/logout-all
 Revokes every session of the user on every device. `204`.
 
-### GET /api/auth/me 🔒
+### GET /api/auth/me
 `200 { "success": true, "data": { "id", "fullName", "email", "createdAt" } }`
 
-## Projects 🔒
+## Projects
 
 ### GET /api/projects
 | Query | Values | Default |
@@ -86,7 +86,7 @@ Only `name` and `startDate` are required. `endDate` may be `null` and must not b
 - `DELETE` → `204`; the project's tasks are deleted too.
 - Malformed ID → `400`; missing or not yours → `404`.
 
-## Tasks 🔒
+## Tasks
 
 ### GET /api/tasks
 Same paging and sorting parameters as projects, plus:
@@ -115,7 +115,7 @@ Each task includes its project: `"project": { "id": "…", "name": "Website Rede
 - Change priority: `PATCH /api/tasks/:id { "priority": "HIGH" }`.
 - Moving a task (`projectId` in PUT/PATCH) requires the target project to be yours.
 
-## Dashboard 🔒
+## Dashboard
 
 ### GET /api/dashboard?today=YYYY-MM-DD
 `today` is optional: clients send their local date so "overdue" follows the user's timezone.
@@ -131,10 +131,10 @@ Each task includes its project: `"project": { "id": "…", "name": "Website Rede
 ```
 "Pending tasks" means tasks whose status is `PENDING`; in-progress tasks are counted separately.
 
-### GET /api/activity?limit=20 🔒
+### GET /api/activity?limit=20
 The user's audit log, newest first: `{ id, action, entityType, entityId, entityName, createdAt }`.
 
-## Notifications 🔒
+## Notifications
 
 ### POST /api/notifications/devices
 Registers this phone for due-tomorrow reminders. Body: `{ "token": "ExponentPushToken[…]", "platform": "android", "timezone": "Asia/Kolkata" }` → `201`. Idempotent; a token registered by another account moves to the caller.
@@ -148,7 +148,7 @@ Your registered phones · send a test push to them now.
 ### POST /api/internal/reminders/run
 For a scheduler, not users: `Authorization: Bearer <CRON_SECRET>`. Sends each phone at most one reminder per local day at or after `REMINDER_HOUR` (default 18:00 on the phone's clock). `404` when `CRON_SECRET` is not configured.
 
-## Admin 🔒 (role ADMIN)
+## Admin (role ADMIN)
 
 Everyone else gets `403 FORBIDDEN`. The role is checked against the database on every request.
 

@@ -1,6 +1,6 @@
 # Requirements checklist
 
-Mapped to the assignment PDF. ✅ implemented and verified · 🟡 needs your accounts (deployment / recording).
+Mapped to the assignment PDF. Checked items are implemented and verified.
 
 ## Authentication
 - [x] Register — `POST /api/auth/register`; web `/register`; Android Register screen
@@ -107,8 +107,8 @@ Extra endpoints beyond the minimum: `PATCH /api/projects/{id}` and `PATCH /api/t
 - [x] Push notifications for tasks due tomorrow — Expo push + hourly job, on-device fallback in Expo Go (`notifications.test.ts`)
 
 ## Submission
-- [ ] 🟡 Public GitHub repository
-- [ ] 🟡 Web deployment URL
-- [ ] 🟡 Backend deployment URL
-- [ ] 🟡 Android APK / EAS link
-- [ ] 🟡 5-minute screen recording (`docs/DEMO_SCRIPT.md`)
+- [x] Public GitHub repository
+- [x] Web deployment URL
+- [x] Backend deployment URL
+- [x] Android APK
+- [ ] 5-minute screen recording (`docs/DEMO_SCRIPT.md`)
